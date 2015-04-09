@@ -25,11 +25,11 @@ while action == "1"
   puts "Is student TASFA? (y/n): "
   tasfa = gets.chomp
   while tasfa != "y" && tasfa != "n"
-    puts "Is student TASFA? (y/n): "
+    puts "\nIs student TASFA? (y/n): "
     tasfa = gets.chomp
   end
 
-  puts "Please enter dependency status (dep/ind): "
+  puts "\nPlease enter dependency status (dep/ind): "
   depStatus = gets.chomp
 
   puts "\nPlease enter old budget: "
@@ -38,7 +38,7 @@ while action == "1"
   puts "\nPlease enter old EFC: "
   oldEfc = gets.chomp.to_i
 
-  puts "Please enter SAP status (good/bad): "
+  puts "\nPlease enter SAP status (good/bad): "
   sapStatus = gets.chomp
   while sapStatus != "good" && sapStatus != "bad"
     endputs "Please enter SAP status (good/bad): "
@@ -51,41 +51,41 @@ while action == "1"
 
   #RPAAWRD
   if tasfa == "n"
-    puts "Please enter Fall Pell: "
+    puts "\nPlease enter Fall Pell: "
     fallPell = gets.chomp.to_i
 
-    puts "Please enter Spring Pell: "
+    puts "\nPlease enter Spring Pell: "
     springPell = gets.chomp.to_i
 
-    puts "Please enter Fall Sub: "
+    puts "\nPlease enter Fall Sub: "
     fallSub = gets.chomp.to_i
 
-    puts "Please enter Spring Sub: "
+    puts "\nPlease enter Spring Sub: "
     springSub = gets.chomp.to_i
 
-    puts "Please enter Fall Unsub: "
+    puts "\nPlease enter Fall Unsub: "
     fallUnsub = gets.chomp.to_i
 
-    puts "Please enter Spring Unsub: "
+    puts "\nPlease enter Spring Unsub: "
     springUnsub = gets.chomp.to_i
   end
 
   #ROAENRL
-  puts "Please enter Fall enrollment: "
+  puts "\nPlease enter Fall enrollment: "
   fallEnrollment = gets.chomp.to_i
 
-  puts "Please enter Spring enrollment: "
+  puts "\nPlease enter Spring enrollment: "
   springEnrollment = gets.chomp.to_i
 
   #RNASL
   if tasfa == "n"
-    puts "Please enter LEU: "
+    puts "\nPlease enter LEU: "
     pellLeu = gets.chomp.to_f
 
-    puts "Please enter total Sub borrowed: "
+    puts "\nPlease enter total Sub borrowed: "
     totalSub = gets.chomp.to_i
 
-    puts "Please enter total Unsub borrowed: "
+    puts "\nPlease enter total Unsub borrowed: "
     totalUnsub = gets.chomp.to_i
     totalLoans = totalSub + totalUnsub
 
@@ -106,7 +106,7 @@ while action == "1"
   end
 
   #RBAPBUD
-  puts "Please enter summer budget: "
+  puts "\nPlease enter summer budget: "
   summerBudget = gets.chomp.to_i
   newBudget = oldBudget + summerBudget
 
@@ -115,15 +115,15 @@ while action == "1"
 
   #RNIMS
   #M11 for FA/SPR, M7 for FA or SPR, M2 for sum only
-  puts "Please enter new EFC: "
+  puts "\nPlease enter new EFC: "
   newEfc = gets.chomp.to_i
 
   while newEfc < oldEfc
-    puts "new EFC must be larger than or equal to old EFC."
+    puts "\nnew EFC must be larger than or equal to old EFC."
     puts "\nPlease enter old EFC: "
     oldEfc = gets.chomp.to_i
 
-    puts "Please enter new EFC: "
+    puts "\nPlease enter new EFC: "
     newEfc = gets.chomp.to_i
   end
 
@@ -160,10 +160,8 @@ while action == "1"
 
     if pellLeu >= 575
       pellAward = ((600 - pellLeu) * 0.01) * annualPell
-    elsif annualPell - (fallPell + springPell) <= 1433
-      pellAward = annualPell - (fallPell + springPell)
     else
-      pellAward = 1433
+      pellAward = (annualPell - (fallPell + springPell)) * 0.5
     end
 
     if pellAward < 1000

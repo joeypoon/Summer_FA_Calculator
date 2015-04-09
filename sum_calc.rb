@@ -130,7 +130,27 @@ while action == "1"
 
     if fallEnrollment == 0 || springEnrollment == 0
       puts "\n***Please check NSLDS and add student to TM***"
+
+      begin
+        puts "\nEnter amount of outside Pell: "
+        outsidePell = gets.chomp
+      end until validateInt outsidePell
+      outsidePell = outsidePell.to_i
+
+      begin
+        puts "\nEnter amount of outside sub: "
+        outsideSub = gets.chomp
+      end until validateInt outsideSub
+      outsideSub = outsideSub.to_i
+
+      begin
+        puts "\nEnter amount of outside unsub: "
+        outsideUnsub = gets.chomp
+      end until validateInt outsideUnsub
+      outsideUnsub = outsideUnsub.to_i
+
     end
+
     if pellLeu >= 500
       puts "\n***Please confirm Pell LEU on NSLDS***"
       puts "LEU on NSLDS: "
@@ -195,7 +215,7 @@ while action == "1"
       if pellLeu > 575
         pellAward = ((600 - pellLeu) * 0.01) * annualPell
       else
-        pellAward = annualPell - fsPell
+        pellAward = annualPell - fsPell - outsidePell
         if fallEnrollment + springEnrollment <= 12
           pellAward = pellAward / 2.0
         elsif fallEnrollment + springEnrollment <= 15
@@ -263,9 +283,9 @@ while action == "1"
       end
     end
 
-    if fsSub > 0 && fsSub < annualSubLim
-      if fsSub + fsUnsub < annualLoanLim
-        subAward = annualSubLim - fsSub
+    if fsSub > 0 && fsSub + outsideSub < annualSubLim
+      if fsSub + outsideSub + fsUnsub + outsideUnsub < annualLoanLim
+        subAward = annualSubLim - (fsSub + outsideSub)
         if subAward > annualSubLim/2
           subAward = annualSubLim/2
         end
@@ -281,8 +301,8 @@ while action == "1"
       subAward = 0
     end
 
-    if fsUnsub > 0 && fsUnsub < annualLoanLim - fsSub
-      unsubAward = annualLoanLim - (subAward + fsSub + fsUnsub)
+    if fsUnsub > 0 && fsUnsub < annualLoanLim - (fsSub + outsideSub)
+      unsubAward = annualLoanLim - (subAward + fsSub + outsideSub + fsUnsub + outsideUnsub)
       if unsubAward > annualLoanLim/2
         unsubAward = annualLoanLim/2 - subAward
       end

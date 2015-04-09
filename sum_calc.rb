@@ -142,9 +142,6 @@ while action == "1"
   summerBudget = gets.chomp.to_i
   newBudget = oldBudget + summerBudget
 
-  puts "\n***New budget is: " + newBudget.to_s + "***"
-  gets
-
   #RNIMS
   #M11 for FA/SPR, M7 for FA or SPR, M2 for sum only
   puts "\nPlease enter new EFC: "
@@ -161,9 +158,6 @@ while action == "1"
 
   sumEfc = newEfc - oldEfc
 
-  puts "\n***Summer EFC is: " + sumEfc.to_s + "***"
-  gets
-
   #WADVISE
   puts "\nPlease enter student grade level (1, 2, 3, 4, or 6): "
   gradeLevel = gets.chomp.to_i
@@ -177,7 +171,9 @@ while action == "1"
   puts "\nStudent should be awarded: "
   if tasfa == "n"
     if fallEnrollment + springEnrollment >= 12
-      if oldEfc <= 5100
+      if oldEfc == 0
+        annualPell = annualPell
+      elsif oldEfc <= 5100
         pellFactor = (oldEfc - 1)/100
         if pellFactor == 1
           annualPell -= 50
@@ -195,9 +191,9 @@ while action == "1"
       else
         pellAward = (annualPell - (fsPell))
         if fallEnrollment + springEnrollment <= 12
-          pellAward /= 2
+          pellAward /= 2.0
         elsif fallEnrollment + springEnrollment <= 15
-          pellAward /= 3
+          pellAward /= 3.0
         end
       end
 
@@ -256,13 +252,19 @@ while action == "1"
     end
 
     if fsSub > 0 && fsSub < annualSubLim
-      subAward = annualSubLim - fsSub
-      if subAward > annualSubLim/2
-        subAward = annualSubLim/2
+      if fsSub + fsUnsub < annualLoanLim
+        subAward = annualSubLim - fsSub
+        if subAward > annualSubLim/2
+          subAward = annualSubLim/2
+        end
+        if totalSub + subAward >= subAgg
+          subAward = subAgg - totalSub
+        end
+
+      else
+        subAward = 0
       end
-      if totalSub + subAward >= subAgg
-        subAward = subAgg - totalSub
-      end
+
     else
       subAward = 0
     end

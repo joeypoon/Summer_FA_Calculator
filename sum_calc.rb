@@ -11,10 +11,20 @@ ind2sub = 4500
 ind2Total = 10500
 ind3sub = 5500
 ind3Total = 12500
+gradTotal = 20500
 
 annualPell = 5730
 subAgg = 23000
 loanAgg = 57500
+gradAgg = 138500
+
+def validateInt input
+  if (Integer(input) rescue nil) != input.to_i
+    return false
+  else
+    return true
+  end
+end
 
 puts "Type 1 for new calculation or press any other key to exit."
 action = gets.chomp
@@ -22,21 +32,29 @@ action = gets.chomp
 while action == "1"
 
   #ROASTAT
-  puts "Is student TASFA? (y/n): "
-  tasfa = gets.chomp
-  while tasfa != "y" && tasfa != "n"
+  begin
     puts "\nIs student TASFA? (y/n): "
     tasfa = gets.chomp
-  end
+  end until tasfa == "y" || tasfa == "n"
 
-  puts "\nPlease enter dependency status (dep/ind): "
-  depStatus = gets.chomp
+  begin
+    puts "\nPlease enter dependency status (dep/ind): "
+    depStatus = gets.chomp
+  end until depStatus == "dep" || depStatus == "ind"
 
-  puts "\nPlease enter old budget: "
-  oldBudget = gets.chomp.to_i
+  begin
+    puts "\nPlease enter old budget: "
+    oldBudget = gets.chomp
+  end until validateInt oldBudget
+  oldBudget = oldBudget.to_i
 
   puts "\nPlease enter old EFC: "
-  oldEfc = gets.chomp.to_i
+  oldEfc = gets.chomp
+  while (Integer(oldEfc) rescue nil) != oldEfc.to_i
+    puts "\nPlease enter old EFC: "
+    oldEfc = gets.chomp
+  end
+  oldEfc = oldEfc.to_i
 
   puts "\nPlease enter SAP status (good/bad): "
   sapStatus = gets.chomp
@@ -52,24 +70,47 @@ while action == "1"
   #RPAAWRD
   if tasfa == "n"
     puts "\nPlease enter Fall + Spring Pell: "
-    fsPell = gets.chomp.to_i
+    fsPell = gets.chomp
+    while (Integer(fsPell) rescue nil) != fsPell.to_i
+      puts "\nPlease enter Fall + Spring Pell: "
+      fsPell = gets.chomp
+    end
+    fsPell = fsPell.to_i
 
     puts "\nPlease enter Fall + Spring Sub: "
-    fsSub = gets.chomp.to_i
+    fsSub = gets.chomp
+    while (Integer(fsSub) rescue nil) != fsSub.to_i
+      puts "\nPlease enter Fall + Spring Sub: "
+      fsSub = gets.chomp
+    end
+    fsSub = fsSub.to_i
 
     puts "\nPlease enter Fall + Spring Unsub: "
-    fsUnsub = gets.chomp.to_i
-  end
+    fsUnsub = gets.chomp
+    while (Integer(fsUnsub) rescue nil) != fsUnsub.to_i
+      puts "\nPlease enter Fall + Spring Unsub: "
+      fsUnsub = gets.chomp
+    end
+    fsUnsub = fsUnsub.to_i
 
   #ROAENRL
-  puts "\nPlease enter Fall enrollment: "
-  fallEnrollment = gets.chomp.to_i
+    puts "\nPlease enter Fall enrollment: "
+    fallEnrollment = gets.chomp
+    while (Integer(fallEnrollment) rescue nil) != fallEnrollment.to_i
+      puts "\nPlease enter Fall enrollment: "
+      fallEnrollment = gets.chomp
+    end
+    fallEnrollment = fallEnrollment.to_i
 
-  puts "\nPlease enter Spring enrollment: "
-  springEnrollment = gets.chomp.to_i
+    puts "\nPlease enter Spring enrollment: "
+    springEnrollment = gets.chomp
+    while springEnrollment.to_i.to_s != springEnrollment
+      puts "\nPlease enter Spring enrollment: "
+      springEnrollment = gets.chomp
+    end
+    springEnrollment = springEnrollment.to_i
 
   #RNASL
-  if tasfa == "n"
     puts "\nPlease enter LEU: "
     pellLeu = gets.chomp.to_f
 
@@ -97,7 +138,7 @@ while action == "1"
   end
 
   #RBAPBUD
-  puts "\nPlease enter summer budget: "
+  puts "\nPlease enter Summer budget: "
   summerBudget = gets.chomp.to_i
   newBudget = oldBudget + summerBudget
 
@@ -110,7 +151,7 @@ while action == "1"
   newEfc = gets.chomp.to_i
 
   while newEfc < oldEfc
-    puts "\nnew EFC must be larger than or equal to old EFC."
+    puts "\nNew EFC must be larger than or equal to old EFC."
     puts "\nPlease enter old EFC: "
     oldEfc = gets.chomp.to_i
 
@@ -124,7 +165,7 @@ while action == "1"
   gets
 
   #WADVISE
-  puts "\nPlease enter student grade level (1, 2, 3, or 4): "
+  puts "\nPlease enter student grade level (1, 2, 3, 4, or 6): "
   gradeLevel = gets.chomp.to_i
 
   #ROAUSDF
@@ -135,24 +176,48 @@ while action == "1"
   #RPAAWRD
   puts "\nStudent should be awarded: "
   if tasfa == "n"
-    if oldEfc <= 5100
-      pellFactor = (oldEfc - 1)/100
-      if pellFactor == 1
-        annualPell -= 50
-      elsif pellFactor > 1
-        annualPell -= 50 + pellFactor*100
-      else
+    if fallEnrollment + springEnrollment >= 12
+      if oldEfc <= 5100
+        pellFactor = (oldEfc - 1)/100
+        if pellFactor == 1
+          annualPell -= 50
+        elsif pellFactor > 1
+          annualPell -= 50 + pellFactor*100
+        end
+      elsif oldEfc >= 5101 && oldEfc <= 5157
+        annualPell = 602
+      elsif oldEfc > 5157
+        annualPell = 0
       end
-    elsif oldEfc >= 5101 && oldEfc <= 5157
-      annualPell = 602
-    else
-      annualPell = 0
-    end
 
-    if pellLeu >= 575
-      pellAward = ((600 - pellLeu) * 0.01) * annualPell
+      if pellLeu > 575
+        pellAward = ((600 - pellLeu) * 0.01) * annualPell
+      else
+        pellAward = (annualPell - (fsPell))
+        if fallEnrollment + springEnrollment <= 12
+          pellAward /= 2
+        elsif fallEnrollment + springEnrollment <= 15
+          pellAward /= 3
+        end
+      end
+
     else
-      pellAward = (annualPell - (fsPell)) * 0.5
+      annualPell /= 2
+      if oldEfc <= 4600
+        pellFactor = (oldEfc - 1)/100
+        if pellFactor == 1
+          annualPell -= 25
+        elsif pellFactor > 1
+          annualPell -= 25 + pellFactor*50
+        end
+      elsif oldEfc > 4600
+        annualPell = 0
+      end
+      if pellLeu > 575
+        pellAward = ((600 - pellLeu) * 0.01) * annualPell
+      else
+        pellAward = annualPell * 0.5
+      end
     end
 
     if pellAward < 1000
@@ -169,9 +234,12 @@ while action == "1"
       when 2
         annualSubLim = ind2sub
         annualLoanLim = ind2Total
-      else
+      when 3 || 4
         annualSubLim = ind3sub
         annualLoanLim = ind3Total
+      when 6
+        annualSubLim = 0
+        annualLoanLim = gradTotal
       end
     else
       case gradeLevel
@@ -218,11 +286,54 @@ while action == "1"
       unsubAward = 0
     end
 
+    totalAwards = pellAward + mdtus + subAward + unsubAward
+
   else
     pellAward = 0
     mdtut = 1500
     subAward = 0
     unsubAward = 0
+    totalAwards = mdtut
+  end
+
+  if totalAwards > summerBudget - sumEfc
+    if unsubAward > 0
+      unsubAward -= (totalAwards - (summerBudget - sumEfc))
+      if unsubAward < 0
+        unsubAward = 0
+      end
+    end
+    totalAwards = pellAward + mdtus + subAward + unsubAward
+  end
+
+  if totalAwards > summerBudget - sumEfc
+    if subAward > 0
+      subAward -= (totalAwards - (summerBudget - sumEfc))
+      if subAward < 0
+        subAward = 0
+      end
+    end
+    totalAwards = pellAward + mdtus + subAward + unsubAward
+  end
+
+  while totalAwards > summerBudget - sumEfc
+    if mdtus > 0
+      mdtus -= (totalAwards - (summerBudget - sumEfc))
+      if mdtus < 0
+        mdtus = 0
+      end
+    end
+    totalAwards = pellAward + mdtus + subAward + unsubAward
+  end
+
+  while totalAwards > summerBudget - sumEfc
+    if pellAward > 0
+      pellAward -= (totalAwards - (summerBudget - sumEfc))
+      if pellAward < 0
+        pellAward = 0
+      end
+    end
+    totalAwards = pellAward + mdtus + subAward + unsubAward
   end
 
   puts "\nPell: " + pellAward.to_s

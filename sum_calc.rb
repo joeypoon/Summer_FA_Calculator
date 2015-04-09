@@ -56,12 +56,19 @@ while action == "1"
   end
   oldEfc = oldEfc.to_i
 
-  puts "\nPlease enter SAP status (good/bad): "
-  sapStatus = gets.chomp
-  while sapStatus != "good" && sapStatus != "bad"
-    endputs "Please enter SAP status (good/bad): "
-    sapStatus = gets.chomp
+  puts "\nPlease enter Pell EFC: "
+  pellEfc = gets.chomp
+  while (Integer(pellEfc) rescue nil) != pellEfc.to_i
+    puts "\nPlease enter old EFC: "
+    pellEfc = gets.chomp
   end
+  pellEfc = pellEfc.to_i
+
+  begin
+    puts "\nPlease enter SAP status (good/bad): "
+    sapStatus = gets.chomp
+  end until sapStatus == "good" || sapStatus == "bad"
+
   if sapStatus == "bad"
     puts "\n***Please check student after SAP is reviewed - Add ROAMESG***"
     redo
@@ -123,7 +130,6 @@ while action == "1"
 
     if fallEnrollment == 0 || springEnrollment == 0
       puts "\n***Please check NSLDS and add student to TM***"
-      gets
     end
     if pellLeu >= 500
       puts "\n***Please confirm Pell LEU on NSLDS***"
@@ -159,8 +165,10 @@ while action == "1"
   sumEfc = newEfc - oldEfc
 
   #WADVISE
-  puts "\nPlease enter student grade level (1, 2, 3, 4, or 6): "
-  gradeLevel = gets.chomp.to_i
+  begin
+    puts "\nPlease enter student grade level (1, 2, 3, 4, 5, or 6): "
+    gradeLevel = gets.chomp.to_i
+  end until gradeLevel >= 1 && gradeLevel <= 6
 
   #ROAUSDF
   puts "\n***Please input in ROAUSDF: LEU, Summer hours, budget, and EFC***"
@@ -170,43 +178,43 @@ while action == "1"
   #RPAAWRD
   puts "\nStudent should be awarded: "
   if tasfa == "n"
-    if fallEnrollment + springEnrollment >= 12
-      if oldEfc == 0
-        annualPell = annualPell
-      elsif oldEfc <= 5100
-        pellFactor = (oldEfc - 1)/100
-        if pellFactor == 1
-          annualPell -= 50
-        elsif pellFactor > 1
-          annualPell -= 50 + pellFactor*100
-        end
-      elsif oldEfc >= 5101 && oldEfc <= 5157
-        annualPell = 602
-      elsif oldEfc > 5157
+    if fallEnrollment + springEnrollment >= 24
+      pellAward = 0
+    elsif fallEnrollment + springEnrollment >= 12
+      if pellEfc > 5157
         annualPell = 0
+      elsif pellEfc >= 5101 && pellEfc <= 5157
+        annualPell = 602
+      elsif pellEfc > 100 && pellEfc <= 5100
+        pellFactor = (pellEfc - 1) / 100
+        annualPell = annualPell - (50 + pellFactor * 100)
+      elsif pellEfc > 0 && pellEfc <= 100
+        annualPell = annualPell - 50
       end
 
       if pellLeu > 575
         pellAward = ((600 - pellLeu) * 0.01) * annualPell
       else
-        pellAward = (annualPell - (fsPell))
+        pellAward = annualPell - fsPell
         if fallEnrollment + springEnrollment <= 12
-          pellAward /= 2.0
+          pellAward = pellAward / 2.0
         elsif fallEnrollment + springEnrollment <= 15
-          pellAward /= 3.0
+          pellAward = pellAward / 3.0
         end
       end
 
     else
-      annualPell /= 2
-      if oldEfc <= 4600
-        pellFactor = (oldEfc - 1)/100
+      annualPell = annualPell / 2
+      if pellEfc == 0
+        annualPell = annualPell
+      elsif pellEfc <= 4600
+        pellFactor = (pellEfc - 1) / 100
         if pellFactor == 1
           annualPell -= 25
         elsif pellFactor > 1
-          annualPell -= 25 + pellFactor*50
+          annualPell -= 25 + pellFactor * 50
         end
-      elsif oldEfc > 4600
+      elsif pellEfc > 4600
         annualPell = 0
       end
       if pellLeu > 575
@@ -214,6 +222,10 @@ while action == "1"
       else
         pellAward = annualPell * 0.5
       end
+    end
+
+    if gradeLevel > 4
+      pellAward = 0
     end
 
     if pellAward < 1000
@@ -230,7 +242,7 @@ while action == "1"
       when 2
         annualSubLim = ind2sub
         annualLoanLim = ind2Total
-      when 3 || 4
+      when 3..5
         annualSubLim = ind3sub
         annualLoanLim = ind3Total
       when 6

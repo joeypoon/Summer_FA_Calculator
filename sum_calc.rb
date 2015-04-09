@@ -51,23 +51,14 @@ while action == "1"
 
   #RPAAWRD
   if tasfa == "n"
-    puts "\nPlease enter Fall Pell: "
-    fallPell = gets.chomp.to_i
+    puts "\nPlease enter Fall + Spring Pell: "
+    fsPell = gets.chomp.to_i
 
-    puts "\nPlease enter Spring Pell: "
-    springPell = gets.chomp.to_i
+    puts "\nPlease enter Fall + Spring Sub: "
+    fsSub = gets.chomp.to_i
 
-    puts "\nPlease enter Fall Sub: "
-    fallSub = gets.chomp.to_i
-
-    puts "\nPlease enter Spring Sub: "
-    springSub = gets.chomp.to_i
-
-    puts "\nPlease enter Fall Unsub: "
-    fallUnsub = gets.chomp.to_i
-
-    puts "\nPlease enter Spring Unsub: "
-    springUnsub = gets.chomp.to_i
+    puts "\nPlease enter Fall + Spring Unsub: "
+    fsUnsub = gets.chomp.to_i
   end
 
   #ROAENRL
@@ -161,7 +152,7 @@ while action == "1"
     if pellLeu >= 575
       pellAward = ((600 - pellLeu) * 0.01) * annualPell
     else
-      pellAward = (annualPell - (fallPell + springPell)) * 0.5
+      pellAward = (annualPell - (fsPell)) * 0.5
     end
 
     if pellAward < 1000
@@ -196,8 +187,8 @@ while action == "1"
       end
     end
 
-    if fallSub + springSub > 0 && fallSub + springSub < annualSubLim
-      subAward = annualSubLim - fallSub - springSub
+    if fsSub > 0 && fsSub < annualSubLim
+      subAward = annualSubLim - fsSub
       if subAward > annualSubLim/2
         subAward = annualSubLim/2
       end
@@ -208,8 +199,8 @@ while action == "1"
       subAward = 0
     end
 
-    if fallUnsub + springUnsub > 0 && fallUnsub + springUnsub < annualLoanLim - (fallSub + springSub)
-      unsubAward = annualLoanLim - (subAward + fallSub + springSub + fallUnsub + springUnsub)
+    if fsUnsub > 0 && fsUnsub < annualLoanLim - fsSub
+      unsubAward = annualLoanLim - (subAward + fsSub + fsUnsub)
       if unsubAward > annualLoanLim/2
         unsubAward = annualLoanLim/2 - subAward
       end
@@ -229,13 +220,17 @@ while action == "1"
 
   else
     pellAward = 0
-    mdtus = 1500
+    mdtut = 1500
     subAward = 0
     unsubAward = 0
   end
 
   puts "\nPell: " + pellAward.to_s
-  puts "MDTUS: " + mdtus.to_s
+  if tasfa == "n"
+    puts "MDTUS: " + mdtus.to_s
+  else
+    puts "MDTUT: " + mdtut.to_s
+  end
   puts "Sub Loans: " + subAward.to_s
   puts "Unsub Loans: " + unsubAward.to_s
   if subAward + unsubAward + pellAward == 0 && mdtus > 0
@@ -261,7 +256,7 @@ while action == "1"
   end
 
   puts "\nFill out sum app form: "
-  puts "SAP: " + sapStatus.to_s + "\nFall Pell: " + fallPell.to_s + "\nSpring Pell: " + springPell.to_s + "\nNew Budget: " + newBudget.to_s + "\nOld Budget: " + oldBudget.to_s + "\nSummer Budget: " + summerBudget.to_s + "\nNew EFC: " + newEfc.to_s + "\nOld EFC: " + oldEfc.to_s + "\nSummer EFC: " + sumEfc.to_s + "\nSummer Pell: " + pellAward.to_s + "\nSummer Sub: " + subAward.to_s + "\nSummer Unsub: " + unsubAward.to_s + "\nMDTUS: " + mdtus.to_s
+  puts "SAP: " + sapStatus.to_s + "\nFall + Spring Pell: " + fsPell.to_s + "\nNew Budget: " + newBudget.to_s + "\nOld Budget: " + oldBudget.to_s + "\nSummer Budget: " + summerBudget.to_s + "\nNew EFC: " + newEfc.to_s + "\nOld EFC: " + oldEfc.to_s + "\nSummer EFC: " + sumEfc.to_s + "\nSummer Pell: " + pellAward.to_s + "\nSummer Sub: " + subAward.to_s + "\nSummer Unsub: " + unsubAward.to_s + "\nMDTUS: " + mdtus.to_s
 
   puts
   puts "Type 1 for new calculation or press any other key to exit."

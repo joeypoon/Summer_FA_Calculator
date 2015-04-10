@@ -32,10 +32,18 @@ def validateInt input
   end
 end
 
-puts "Type 1 for new calculation or press any other key to exit."
-action = gets.chomp
+def validateFloat input
+  if (Float(input) rescue nil) != input.to_f
+    return false
+  else
+    return true
+  end
+end
 
-while action == "1"
+begin
+
+  puts "Type 1 for new calculation or press any other key to exit."
+  action = gets.chomp
 
   #ROASTAT
   begin
@@ -54,20 +62,16 @@ while action == "1"
   end until validateInt oldBudget
   oldBudget = oldBudget.to_i
 
-  puts "\nPlease enter old EFC: "
-  oldEfc = gets.chomp
-  while (Integer(oldEfc) rescue nil) != oldEfc.to_i
+  begin
     puts "\nPlease enter old EFC: "
     oldEfc = gets.chomp
-  end
+  end until validateInt oldEfc
   oldEfc = oldEfc.to_i
 
-  puts "\nPlease enter Pell EFC: "
-  pellEfc = gets.chomp
-  while (Integer(pellEfc) rescue nil) != pellEfc.to_i
-    puts "\nPlease enter old EFC: "
+  begin
+    puts "\nPlease enter Pell EFC: "
     pellEfc = gets.chomp
-  end
+  end until validateInt pellEfc
   pellEfc = pellEfc.to_i
 
   begin
@@ -82,56 +86,56 @@ while action == "1"
 
   #RPAAWRD
   if tasfa == "n"
-    puts "\nPlease enter Fall + Spring Pell: "
-    fsPell = gets.chomp
-    while (Integer(fsPell) rescue nil) != fsPell.to_i
+    begin
       puts "\nPlease enter Fall + Spring Pell: "
       fsPell = gets.chomp
-    end
+    end until validateInt fsPell
     fsPell = fsPell.to_i
 
-    puts "\nPlease enter Fall + Spring Sub: "
-    fsSub = gets.chomp
-    while (Integer(fsSub) rescue nil) != fsSub.to_i
+    begin
       puts "\nPlease enter Fall + Spring Sub: "
       fsSub = gets.chomp
-    end
+    end until validateInt fsSub
     fsSub = fsSub.to_i
 
-    puts "\nPlease enter Fall + Spring Unsub: "
-    fsUnsub = gets.chomp
-    while (Integer(fsUnsub) rescue nil) != fsUnsub.to_i
+    begin
       puts "\nPlease enter Fall + Spring Unsub: "
       fsUnsub = gets.chomp
-    end
+    end until validateInt fsUnsub
     fsUnsub = fsUnsub.to_i
 
   #ROAENRL
-    puts "\nPlease enter Fall enrollment: "
-    fallEnrollment = gets.chomp
-    while (Integer(fallEnrollment) rescue nil) != fallEnrollment.to_i
+    begin
       puts "\nPlease enter Fall enrollment: "
       fallEnrollment = gets.chomp
-    end
+    end until validateInt fallEnrollment
     fallEnrollment = fallEnrollment.to_i
 
-    puts "\nPlease enter Spring enrollment: "
-    springEnrollment = gets.chomp
-    while springEnrollment.to_i.to_s != springEnrollment
+    begin
       puts "\nPlease enter Spring enrollment: "
       springEnrollment = gets.chomp
-    end
+    end until validateInt springEnrollment
     springEnrollment = springEnrollment.to_i
 
   #RNASL
-    puts "\nPlease enter LEU: "
-    pellLeu = gets.chomp.to_f
+    begin
+      puts "\nPlease enter LEU: "
+      pellLeu = gets.chomp
+    end until validateFloat pellLeu
+    pellLeu = pellLeu.to_f
 
-    puts "\nPlease enter total Sub borrowed: "
-    totalSub = gets.chomp.to_i
+    begin
+      puts "\nPlease enter total Sub borrowed: "
+      totalSub = gets.chomp
+    end until validateInt totalSub
+    totalSub = totalSub.to_i
 
-    puts "\nPlease enter total Unsub borrowed: "
-    totalUnsub = gets.chomp.to_i
+    begin
+      puts "\nPlease enter total Unsub borrowed: "
+      totalUnsub = gets.chomp
+    end until validateInt totalUnsub
+    totalUnsub = totalUnsub.to_i
+
     totalLoans = totalSub + totalUnsub
 
     if fallEnrollment == 0 || springEnrollment == 0
@@ -159,8 +163,11 @@ while action == "1"
 
     if pellLeu >= 500
       puts "\n***Please confirm Pell LEU on NSLDS***"
-      puts "LEU on NSLDS: "
-      pellLeu = gets.chomp.to_f
+      begin
+        puts "LEU on NSLDS: "
+        pellLeu = gets.chomp
+      end until validateFloat pellLeu
+      pellLeu = pellLeu.to_f
     end
 
     if totalLoans > loanAgg || totalSub > subAgg
@@ -170,22 +177,34 @@ while action == "1"
   end
 
   #RBAPBUD
-  puts "\nPlease enter Summer budget: "
-  summerBudget = gets.chomp.to_i
+  begin
+    puts "\nPlease enter Summer budget: "
+    summerBudget = gets.chomp
+  end until validateInt summerBudget
+  summerBudget = summerBudget.to_i
+
   newBudget = oldBudget + summerBudget
 
   #RNIMS
-  #M11 for FA/SPR, M7 for FA or SPR, M2 for sum only
-  puts "\nPlease enter new EFC: "
-  newEfc = gets.chomp.to_i
+  begin
+    puts "\nPlease enter new EFC: "
+    newEfc = gets.chomp
+  end until validateInt newEfc
+  newEfc = newEfc.to_i
 
   while newEfc < oldEfc
     puts "\nNew EFC must be larger than or equal to old EFC."
-    puts "\nPlease enter old EFC: "
-    oldEfc = gets.chomp.to_i
+    begin
+      puts "\nPlease enter old EFC: "
+      oldEfc = gets.chomp
+    end until validateInt oldEfc
+    oldEfc = oldEfc.to_i
 
-    puts "\nPlease enter new EFC: "
-    newEfc = gets.chomp.to_i
+    begin
+      puts "\nPlease enter new EFC: "
+      newEfc = gets.chomp
+    end until validateInt newEfc
+    newEfc = newEfc.to_i
   end
 
   sumEfc = newEfc - oldEfc
@@ -387,7 +406,7 @@ while action == "1"
   puts "\nFill out sum app form: "
   puts "SAP: " + sapStatus.to_s + "\nFall + Spring Pell: " + fsPell.to_s + "\nNew Budget: " + newBudget.to_s + "\nOld Budget: " + oldBudget.to_s + "\nSummer Budget: " + summerBudget.to_s + "\nNew EFC: " + newEfc.to_s + "\nOld EFC: " + oldEfc.to_s + "\nSummer EFC: " + sumEfc.to_s + "\nSummer Pell: " + pellAward.to_s + "\nSummer Sub: " + subAward.to_s + "\nSummer Unsub: " + unsubAward.to_s + "\nMDTUS: " + mdtus.to_s
 
-  puts
-  puts "Type 1 for new calculation or press any other key to exit."
+  puts "\n\nType 1 for new calculation or press any other key to exit."
   action = gets.chomp
-end
+
+end until action != "1"

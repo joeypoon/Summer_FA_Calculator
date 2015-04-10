@@ -1,4 +1,4 @@
-#Loans
+#2014-2015 Annual Limits
 dep1sub = 3500
 dep1Total = 5500
 dep2sub = 4500
@@ -12,11 +12,17 @@ ind2Total = 10500
 ind3sub = 5500
 ind3Total = 12500
 gradTotal = 20500
-
 annualPell = 5730
+
+#2014-2015 Aggregate Limits
 subAgg = 23000
 loanAgg = 57500
 gradAgg = 138500
+
+#Default values
+outsidePell = 0
+outsideSub = 0
+outsideUnsub = 0
 
 def validateInt input
   if (Integer(input) rescue nil) != input.to_i
@@ -200,7 +206,7 @@ while action == "1"
   if tasfa == "n"
     if fallEnrollment + springEnrollment >= 24
       pellAward = 0
-    elsif fallEnrollment + springEnrollment >= 12
+    else
       if pellEfc > 5157
         annualPell = 0
       elsif pellEfc >= 5101 && pellEfc <= 5157
@@ -215,32 +221,10 @@ while action == "1"
       if pellLeu > 575
         pellAward = ((600 - pellLeu) * 0.01) * annualPell
       else
-        pellAward = annualPell - fsPell - outsidePell
-        if fallEnrollment + springEnrollment <= 12
-          pellAward = pellAward / 2.0
-        elsif fallEnrollment + springEnrollment <= 15
-          pellAward = pellAward / 3.0
+        pellAward = annualPell - (fsPell + outsidePell)
+        if pellAward > annualPell / 4
+          pellAward = annualPell / 4
         end
-      end
-
-    else
-      annualPell = annualPell / 2
-      if pellEfc == 0
-        annualPell = annualPell
-      elsif pellEfc <= 4600
-        pellFactor = (pellEfc - 1) / 100
-        if pellFactor == 1
-          annualPell -= 25
-        elsif pellFactor > 1
-          annualPell -= 25 + pellFactor * 50
-        end
-      elsif pellEfc > 4600
-        annualPell = 0
-      end
-      if pellLeu > 575
-        pellAward = ((600 - pellLeu) * 0.01) * annualPell
-      else
-        pellAward = annualPell * 0.5
       end
     end
 

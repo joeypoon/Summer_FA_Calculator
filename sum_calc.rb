@@ -1,6 +1,6 @@
-require "AidCalculations"
+require_relative "aid_calculations"
 
-puts "Enter 1 to continue or press any other key to exit"
+puts "Enter 1 to continue or press any other key to exit."
 action = gets.chomp
 
 while action == "1"
@@ -10,7 +10,11 @@ while action == "1"
   student.ask_dependency_status
   student.ask_old_budget
   student.ask_old_efc
-  student.ask_pell_efc
+
+  if !student.is_tasfa?
+    student.ask_pell_efc
+  end
+
   student.ask_sap
 
   if student.is_sap?
@@ -38,7 +42,7 @@ while action == "1"
 
   student.check_enrollment
   student.ask_summer_budget
-  student.set_new_budget  #optional
+  #student.set_new_budget  #optional
 
   student.ask_new_efc
   student.check_efc
@@ -53,9 +57,9 @@ while action == "1"
 
   puts "\nStudent should be awarded: "
   student.display_awards
-  student.display_stats  #optional
+  #student.display_stats  #optional
 
-  puts "Enter 1 to continue or press any other key to exit"
+  puts "\nEnter 1 to continue or press any other key to exit"
   action = gets.chomp
 
 end

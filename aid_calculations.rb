@@ -23,6 +23,7 @@ class AidCalculations
     @grad_agg = 138500
 
     #Default values
+    @fs_pell = 0
     @pell_award = 0
     @sub_award = 0
     @unsub_award = 0
@@ -59,7 +60,7 @@ class AidCalculations
   end
 
   def is_tasfa?
-    if @tasfa = "y"
+    if @tasfa == "y"
       return true
     else
       return false
@@ -134,6 +135,7 @@ class AidCalculations
       @fs_unsub = gets.chomp
     end until is_int? @fs_unsub
     @fs_unsub = @fs_unsub.to_i
+  end
 
   def ask_fall_enrollment
     begin
@@ -155,7 +157,7 @@ class AidCalculations
     begin
       puts "\nPlease enter LEU: "
       @pell_leu = gets.chomp
-    end until is_float?? @pell_leu
+    end until is_float? @pell_leu
     @pell_leu = @pell_leu.to_f
   end
 
@@ -215,11 +217,7 @@ class AidCalculations
   def check_leu
     if @pell_leu >= 500
       puts "\n***Please confirm Pell LEU on NSLDS***"
-      begin
-        puts "LEU on NSLDS: "
-        @pell_leu = gets.chomp
-      end until is_float?? @pell_leu
-      @pell_leu = @pell_leu.to_f
+      ask_leu
     end
   end
 
@@ -286,8 +284,10 @@ class AidCalculations
     if !is_tasfa?
       calculate_pell
       calculate_mdtus
+      set_annual_loan_limits
       calculate_sub
       calculate_unsub
+      set_total_awards
       check_over_summer_budget
     else
       @mdtut = max_mdtu
@@ -311,7 +311,7 @@ class AidCalculations
 
   def display_stats
     puts "\nFill out sum app form: "
-    puts "SAP: " + @sap_status.to_s + "\nFall + Spring Pell: " + @fs_pell.to_s + "\nNew Budget: " + @new_budget.to_s + "\nOld Budget: " + @old_budget.to_s + "\nSummer Budget: " + @summer_budget.to_s + "\nNew EFC: " + @new_efc.to_s + "\nOld EFC: " + @old_efc.to_s + "\nSummer EFC: " + @summer_efc.to_s + "\nSummer Pell: " + @pell_award.to_s + "\nSummer Sub: " + @sub_award.to_s + "\nSummer Unsub: " + @unsub_award.to_s + "\n@mdtus: " + @mdtus.to_s
+    puts "SAP: " + @sap_status.to_s + "\nFall + Spring Pell: " + @fs_pell.to_s + "\nNew Budget: " + @new_budget.to_s + "\nOld Budget: " + @old_budget.to_s + "\nSummer Budget: " + @summer_budget.to_s + "\nNew EFC: " + @new_efc.to_s + "\nOld EFC: " + @old_efc.to_s + "\nSummer EFC: " + @summer_efc.to_s + "\nSummer Pell: " + @pell_award.to_s + "\nSummer Sub: " + @sub_award.to_s + "\nSummer Unsub: " + @unsub_award.to_s + "\nMDTUS: " + @mdtus.to_s + "\nMDTUT" + @mdtut.to_s
   end
 
   private

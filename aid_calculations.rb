@@ -1,5 +1,26 @@
 class AidCalculations
 
+  attr_accessor :tasfa
+  attr_accessor :dependency_status
+  attr_accessor :old_budget
+  attr_accessor :old_efc
+  attr_accessor :pell_efc
+  attr_accessor :sap_status
+  attr_accessor :fs_pell
+  attr_accessor :fs_sub
+  attr_accessor :fs_unsub
+  attr_accessor :fall_enrollment
+  attr_accessor :spring_enrollment
+  attr_accessor :pell_leu
+  attr_accessor :total_sub_borrowed
+  attr_accessor :total_unsub_borrowed
+  attr_accessor :summer_budget
+  attr_accessor :new_efc
+  attr_accessor :grade_level
+  attr_accessor :annual_pell
+  attr_accessor :annual_sub_limit
+  attr_accessor :annual_loan_limit
+
   def initialize
     #2014-2015 Annual Limits
     @dep1sub = 3500
@@ -314,7 +335,7 @@ class AidCalculations
     puts "SAP: " + @sap_status.to_s + "\nFall + Spring Pell: " + @fs_pell.to_s + "\nNew Budget: " + @new_budget.to_s + "\nOld Budget: " + @old_budget.to_s + "\nSummer Budget: " + @summer_budget.to_s + "\nNew EFC: " + @new_efc.to_s + "\nOld EFC: " + @old_efc.to_s + "\nSummer EFC: " + @summer_efc.to_s + "\nSummer Pell: " + @pell_award.to_s + "\nSummer Sub: " + @sub_award.to_s + "\nSummer Unsub: " + @unsub_award.to_s + "\nMDTUS: " + @mdtus.to_s + "\nMDTUT" + @mdtut.to_s
   end
 
-  private
+  #private
 
   def calculate_pell
     no_pell_threshold = 5157  #EFC threshold for no Pell

@@ -137,10 +137,12 @@ class Testing < AidCalculations
   def test_grade_level
     self.grade_level = rand(6) + 1
   end
+
 end
 
 for i in 1..3
   puts "Test student #{i}"
   student = Testing.new
-  student.test
+  student.test_grade_level
+  puts student.grade_level
 end

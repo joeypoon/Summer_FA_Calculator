@@ -35,7 +35,6 @@ while action == "1"
     student.ask_leu
     student.ask_total_sub_borrowed
     student.ask_total_unsub_borrowed
-    student.set_total_loans_borrowed
     student.check_leu
     student.check_loan_limits
   end
@@ -46,11 +45,10 @@ while action == "1"
 
   student.ask_new_efc
   student.check_efc
-  student.set_summer_efc
   student.ask_grade_level
 
   puts "\n***Please input in ROAUSDF: LEU, Summer hours, budget, and EFC***"
-  puts "\nLEU: " + student.get_pell_leu.to_s + " \nSummer budget: " + student.get_summer_budget.to_s + " \nSummer EFC: " + student.get_summer_efc.to_s
+  puts "\nLEU: " + student.pell_leu.to_s + " \nSummer budget: " + student.summer_budget.to_s + " \nSummer EFC: " + student.summer_efc.to_s
   gets
 
   student.calculate_awards

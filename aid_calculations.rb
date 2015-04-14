@@ -1,3 +1,5 @@
+require_relative "validations"
+
 class AidCalculations
 
   def test
@@ -154,23 +156,6 @@ class AidCalculations
     @tasfa = "n"
   end
 
-
-  def is_int? input
-    if (Integer(input) rescue nil) != input.to_i
-      return false
-    else
-      return true
-    end
-  end
-
-  def is_float? input
-    if (Float(input) rescue nil) != input.to_f
-      return false
-    else
-      return true
-    end
-  end
-
   def ask_tasfa
     begin
       puts "\nIs student TASFA? (y/n): "
@@ -189,7 +174,7 @@ class AidCalculations
     begin
       puts "\nPlease enter old budget: "
       @old_budget = gets.chomp
-    end until is_int? @old_budget
+    end until Validations.is_int? @old_budget
       @old_budget = @old_budget.to_i
   end
 
@@ -197,7 +182,7 @@ class AidCalculations
     begin
       puts "\nPlease enter old EFC: "
       @old_efc = gets.chomp
-    end until is_int? @old_efc
+    end until Validations.is_int? @old_efc
     @old_efc = @old_efc.to_i
   end
 
@@ -205,7 +190,7 @@ class AidCalculations
     begin
       puts "\nPlease enter Pell EFC: "
       @pell_efc = gets.chomp
-    end until is_int? @pell_efc
+    end until Validations.is_int? @pell_efc
     @pell_efc = @pell_efc.to_i
   end
 
@@ -221,7 +206,7 @@ class AidCalculations
     begin
       puts "\nPlease enter Fall + Spring Pell: "
       @fs_pell = gets.chomp
-    end until is_int? @fs_pell
+    end until Validations.is_int? @fs_pell
     @fs_pell = @fs_pell.to_i
   end
 
@@ -229,7 +214,7 @@ class AidCalculations
     begin
       puts "\nPlease enter Fall + Spring Sub: "
       @fs_sub = gets.chomp
-    end until is_int? @fs_sub
+    end until Validations.is_int? @fs_sub
     @fs_sub = @fs_sub.to_i
   end
 
@@ -237,7 +222,7 @@ class AidCalculations
     begin
       puts "\nPlease enter Fall + Spring Unsub: "
       @fs_unsub = gets.chomp
-    end until is_int? @fs_unsub
+    end until Validations.is_int? @fs_unsub
     @fs_unsub = @fs_unsub.to_i
   end
 
@@ -245,7 +230,7 @@ class AidCalculations
     begin
       puts "\nPlease enter Fall enrollment: "
       @fall_enrollment = gets.chomp
-    end until is_int? @fall_enrollment
+    end until Validations.is_int? @fall_enrollment
     @fall_enrollment = @fall_enrollment.to_i
   end
 
@@ -253,7 +238,7 @@ class AidCalculations
     begin
       puts "\nPlease enter Spring enrollment: "
       @spring_enrollment = gets.chomp
-    end until is_int? @spring_enrollment
+    end until Validations.is_int? @spring_enrollment
     @spring_enrollment = @spring_enrollment.to_i
   end
 
@@ -261,7 +246,7 @@ class AidCalculations
     begin
       puts "\nPlease enter LEU: "
       @pell_leu = gets.chomp
-    end until is_float? @pell_leu
+    end until Validations.is_float? @pell_leu
     @pell_leu = @pell_leu.to_f
   end
 
@@ -269,7 +254,7 @@ class AidCalculations
     begin
       puts "\nPlease enter total Sub borrowed: "
       @total_sub_borrowed = gets.chomp
-    end until is_int? @total_sub_borrowed
+    end until Validations.is_int? @total_sub_borrowed
     @total_sub_borrowed = @total_sub_borrowed.to_i
   end
 
@@ -277,7 +262,7 @@ class AidCalculations
     begin
       puts "\nPlease enter total Unsub borrowed: "
       @total_unsub_borrowed = gets.chomp
-    end until is_int? @total_unsub_borrowed
+    end until Validations.is_int? @total_unsub_borrowed
     @total_unsub_borrowed = @total_unsub_borrowed.to_i
   end
 
@@ -289,7 +274,7 @@ class AidCalculations
     begin
       puts "\nEnter amount of outside Pell: "
       @outside_pell = gets.chomp
-    end until is_int? @outside_pell
+    end until Validations.is_int? @outside_pell
     @outside_pell = @outside_pell.to_i
   end
 
@@ -297,7 +282,7 @@ class AidCalculations
     begin
       puts "\nEnter amount of outside sub: "
       @outside_sub = gets.chomp
-    end until is_int? @outside_sub
+    end until Validations.is_int? @outside_sub
     @outside_sub = @outside_sub.to_i
   end
 
@@ -305,7 +290,7 @@ class AidCalculations
     begin
       puts "\nEnter amount of outside unsub: "
       @outside_unsub = gets.chomp
-    end until is_int? @outside_unsub
+    end until Validations.is_int? @outside_unsub
     @outside_unsub = @outside_unsub.to_i
   end
 
@@ -336,7 +321,7 @@ class AidCalculations
     begin
       puts "\nPlease enter Summer budget: "
       @summer_budget = gets.chomp
-    end until is_int? @summer_budget
+    end until Validations.is_int? @summer_budget
     @summer_budget = @summer_budget.to_i
   end
 
@@ -348,7 +333,7 @@ class AidCalculations
     begin
       puts "\nPlease enter new EFC: "
       @new_efc = gets.chomp
-    end until is_int? @new_efc
+    end until Validations.is_int? @new_efc
     @new_efc = @new_efc.to_i
   end
 

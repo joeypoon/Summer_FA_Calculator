@@ -8,6 +8,9 @@ class AidCalculations
     test_old_efc
     test_pell_efc
     test_sap_status
+    if is_sap
+      exit
+    end
     test_fs_pell
     test_fs_sub
     test_fs_unsub
@@ -32,6 +35,15 @@ class AidCalculations
       puts "\nPlease enter SAP status (good/bad): "
       @sap_status = gets.chomp
     end until @sap_status == "good" || @sap_status == "bad"
+  end
+
+  def is_sap
+    if @sap_status == "bad"
+      puts "***Please review Summer application after student's SAP is reviewed***"
+      return true
+    else
+      return false
+    end
   end
 
   def get_info

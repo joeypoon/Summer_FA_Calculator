@@ -88,11 +88,11 @@ class AidCalculations
     if @tasfa == "n"
       puts "\nPell: " + @pell_award.to_s
       puts "MDTUS: " + @mdtus.to_s
+      puts "Sub Loans: " + @sub_award.to_s
+      puts "Unsub Loans: " + @unsub_award.to_s
     else
       puts "MDTUT: " + @mdtut.to_s
     end
-    puts "Sub Loans: " + @sub_award.to_s
-    puts "Unsub Loans: " + @unsub_award.to_s
   end
 
   def display_roausdf

@@ -1,25 +1,111 @@
 class AidCalculations
 
-  attr_accessor :tasfa
-  attr_accessor :dependency_status
-  attr_accessor :old_budget
-  attr_accessor :old_efc
-  attr_accessor :pell_efc
-  attr_accessor :sap_status
-  attr_accessor :fs_pell
-  attr_accessor :fs_sub
-  attr_accessor :fs_unsub
-  attr_accessor :fall_enrollment
-  attr_accessor :spring_enrollment
-  attr_accessor :pell_leu
-  attr_accessor :total_sub_borrowed
-  attr_accessor :total_unsub_borrowed
-  attr_accessor :summer_budget
-  attr_accessor :new_efc
-  attr_accessor :grade_level
-  attr_accessor :annual_pell
-  attr_accessor :annual_sub_limit
-  attr_accessor :annual_loan_limit
+  def test
+    test_tasfa
+    test_dependency_status
+    test_grade_level
+    test_old_budget
+    test_old_efc
+    test_pell_efc
+    test_sap_status
+    test_fs_pell
+    test_fs_sub
+    test_fs_unsub
+    test_fall_enrollment
+    test_spring_enrollment
+    test_pell_leu
+    test_total_sub_borrowed
+    test_total_unsub_borrowed
+    set_total_loans_borrowed
+    test_summer_budget
+    set_new_budget
+    test_new_efc
+    set_summer_efc
+
+    calculate_awards
+    display_awards
+    display_stats
+  end
+
+  def ask_sap
+    begin
+      puts "\nPlease enter SAP status (good/bad): "
+      @sap_status = gets.chomp
+    end until @sap_status == "good" || @sap_status == "bad"
+  end
+
+  def get_info
+    ask_tasfa
+    ask_dependency_status
+    ask_old_budget
+    ask_old_efc
+
+    if @tasfa == "n"
+      ask_pell_efc
+      ask_fs_pell
+      ask_fs_sub
+      ask_fs_unsub
+    end
+
+    ask_fall_enrollment
+    ask_spring_enrollment
+
+    if @tasfa == "n"
+      ask_leu
+      ask_total_sub_borrowed
+      ask_total_unsub_borrowed
+      set_total_loans_borrowed
+      check_leu
+      check_loan_limits
+    end
+
+    check_enrollment
+    ask_summer_budget
+    #student.set_new_budget  #optional
+
+    ask_new_efc
+    check_efc
+    set_summer_efc
+    ask_grade_level
+  end
+
+  def calculate_awards
+    max_mdtu = 1500
+    if @tasfa == "n"
+      calculate_pell
+      calculate_mdtus
+      set_annual_loan_limits
+      calculate_sub
+      calculate_unsub
+      set_total_awards
+      check_over_summer_budget
+    else
+      @mdtut = max_mdtu
+    end
+  end
+
+  def display_awards
+    if @tasfa == "n"
+      puts "\nPell: " + @pell_award.to_s
+      puts "MDTUS: " + @mdtus.to_s
+    else
+      puts "MDTUT: " + @mdtut.to_s
+    end
+    puts "Sub Loans: " + @sub_award.to_s
+    puts "Unsub Loans: " + @unsub_award.to_s
+  end
+
+  def display_roausdf
+    puts "\n***Please input in ROAUSDF: LEU, Summer hours, budget, and EFC***"
+    puts "\nLEU: " + @pell_leu.to_s + " \nSummer budget: " + @summer_budget.to_s + " \nSummer EFC: " + @summer_efc.to_s
+  end
+
+  def display_stats
+    puts "\nFill out sum app form: "
+    puts "SAP: " + @sap_status.to_s + "\nFall + Spring Pell: " + @fs_pell.to_s + "\nNew Budget: " + @new_budget.to_s + "\nOld Budget: " + @old_budget.to_s + "\nSummer Budget: " + @summer_budget.to_s + "\nNew EFC: " + @new_efc.to_s + "\nOld EFC: " + @old_efc.to_s + "\nSummer EFC: " + @summer_efc.to_s + "\nSummer Pell: " + @pell_award.to_s + "\nSummer Sub: " + @sub_award.to_s + "\nSummer Unsub: " + @unsub_award.to_s + "\nMDTUS: " + @mdtus.to_s + "\nMDTUT: " + @mdtut.to_s
+  end
+
+  private
 
   def initialize
     #2014-2015 Annual Limits
@@ -53,9 +139,9 @@ class AidCalculations
     @outside_pell = 0
     @outside_sub = 0
     @outside_unsub = 0
-
     @tasfa = "n"
   end
+
 
   def is_int? input
     if (Integer(input) rescue nil) != input.to_i
@@ -78,14 +164,6 @@ class AidCalculations
       puts "\nIs student TASFA? (y/n): "
       @tasfa = gets.chomp
     end until @tasfa == "y" || @tasfa == "n"
-  end
-
-  def is_tasfa?
-    if @tasfa == "y"
-      return true
-    else
-      return false
-    end
   end
 
   def ask_dependency_status
@@ -117,13 +195,6 @@ class AidCalculations
       @pell_efc = gets.chomp
     end until is_int? @pell_efc
     @pell_efc = @pell_efc.to_i
-  end
-
-  def ask_sap
-    begin
-      puts "\nPlease enter SAP status (good/bad): "
-      @sap_status = gets.chomp
-    end until @sap_status == "good" || @sap_status == "bad"
   end
 
   def is_sap?
@@ -242,10 +313,6 @@ class AidCalculations
     end
   end
 
-  def get_pell_leu
-    return @pell_leu
-  end
-
   def check_loan_limits
     if @total_loans_borrowed > @loan_agg || @total_sub_borrowed > @sub_agg
       puts "\n***Loan limits exceeded***"
@@ -259,10 +326,6 @@ class AidCalculations
       @summer_budget = gets.chomp
     end until is_int? @summer_budget
     @summer_budget = @summer_budget.to_i
-  end
-
-  def get_summer_budget
-    return @summer_budget
   end
 
   def set_new_budget
@@ -289,53 +352,12 @@ class AidCalculations
     @summer_efc = @new_efc - @old_efc
   end
 
-  def get_summer_efc
-    return @summer_efc
-  end
-
   def ask_grade_level
     begin
       puts "\nPlease enter student grade level (1, 2, 3, 4, 5, or 6): "
       @grade_level = gets.chomp.to_i
     end until @grade_level >= 1 && @grade_level <= 6
   end
-
-  def calculate_awards
-    max_mdtu = 1500
-    if !is_tasfa?
-      calculate_pell
-      calculate_mdtus
-      set_annual_loan_limits
-      calculate_sub
-      calculate_unsub
-      set_total_awards
-      check_over_summer_budget
-    else
-      @mdtut = max_mdtu
-    end
-  end
-
-  def get_mdtut
-    return @mdtut
-  end
-
-  def display_awards
-    if @tasfa == "n"
-      puts "\nPell: " + @pell_award.to_s
-      puts "MDTUS: " + @mdtus.to_s
-    else
-      puts "MDTUT: " + @mdtut.to_s
-    end
-    puts "Sub Loans: " + @sub_award.to_s
-    puts "Unsub Loans: " + @unsub_award.to_s
-  end
-
-  def display_stats
-    puts "\nFill out sum app form: "
-    puts "SAP: " + @sap_status.to_s + "\nFall + Spring Pell: " + @fs_pell.to_s + "\nNew Budget: " + @new_budget.to_s + "\nOld Budget: " + @old_budget.to_s + "\nSummer Budget: " + @summer_budget.to_s + "\nNew EFC: " + @new_efc.to_s + "\nOld EFC: " + @old_efc.to_s + "\nSummer EFC: " + @summer_efc.to_s + "\nSummer Pell: " + @pell_award.to_s + "\nSummer Sub: " + @sub_award.to_s + "\nSummer Unsub: " + @unsub_award.to_s + "\nMDTUS: " + @mdtus.to_s + "\nMDTUT" + @mdtut.to_s
-  end
-
-  #private
 
   def calculate_pell
     no_pell_threshold = 5157  #EFC threshold for no Pell
@@ -365,6 +387,9 @@ class AidCalculations
           @pell_award = @annual_pell / 4
         end
       end
+    end
+    if @pell_award < 0
+      @pell_award = 0
     end
   end
 
@@ -427,6 +452,10 @@ class AidCalculations
     else
       @sub_award = 0
     end
+
+    if @sub_award < 0
+      @sub_award = 0
+    end
   end
 
   def set_total_awards
@@ -450,6 +479,10 @@ class AidCalculations
       end
 
     else
+      @unsub_award = 0
+    end
+
+    if @unsub_award < 0
       @unsub_award = 0
     end
   end
@@ -507,6 +540,116 @@ class AidCalculations
     check_sub_over_budget
     check_mdtus_over_budget
     check_pell_over_budget
+  end
+
+  def test_tasfa
+    random = rand(5) #tasfa students are less common
+    if random == 0
+      @tasfa = "y"
+    else
+      @tasfa = "n"
+    end
+  end
+
+  def test_dependency_status
+    random = rand(2)
+    if random == 0
+      @dependency_status = "dep"
+    else
+      @dependency_status = "ind"
+    end
+  end
+
+  def test_old_budget
+    random = rand(3)
+    @one_semester = 10993
+    @two_semesters = 22000
+    if random == 0
+      @old_budget = 0
+    elsif random == 1
+      @old_budget = @one_semester
+    else
+      @old_budget = @two_semesters
+    end
+  end
+
+  def test_old_efc
+    @max_efc = 6000 #max is 999999 but most are 0 and generally do not exceed 20000 in which case there is little practical difference
+    @half_efc = @max_efc * 0.6 #not really half because costs are not perfectly halved
+    if @old_budget == 0
+      @old_efc = 0
+    elsif @old_budget == @one_semester
+      @old_efc = rand(@half_efc)
+    else
+      @old_efc = rand(@max_efc)
+    end
+  end
+
+  def test_pell_efc
+    @pell_efc = rand(@max_efc)
+  end
+
+  def test_sap_status
+    if rand(10) == 0 #sap don't qualify so not as useful to test many
+      @sap_status = "bad"
+    else
+      @sap_status = "good"
+    end
+  end
+
+  def test_fs_pell
+    @fs_pell = rand(@annual_pell) + 1
+  end
+
+  def test_fs_sub
+    set_annual_loan_limits
+    @fs_sub = rand(@annual_sub_limit) + 1
+  end
+
+  def test_fs_unsub
+    @fs_unsub = rand(@annual_loan_limit - @fs_sub) + 1
+  end
+
+  def test_fall_enrollment
+    @fall_enrollment = rand(16)
+  end
+
+  def test_spring_enrollment
+    @spring_enrollment = rand(16)
+  end
+
+  def test_pell_leu
+    @pell_leu = rand(601)
+  end
+
+  def test_total_sub_borrowed
+    @total_sub_borrowed = rand(@sub_agg)
+  end
+
+  def test_total_unsub_borrowed
+    @total_unsub_borrowed = rand(@loan_agg - @total_sub_borrowed)
+  end
+
+  def test_summer_budget
+    off_campus = 6947
+    with_parents = 5525
+    if rand(2) == 0
+      @summer_budget = with_parents
+    else
+      @summer_budget = off_campus
+    end
+  end
+
+  def test_new_efc
+    if rand(2) == 0
+      @new_efc = @old_efc
+    else
+      @new_efc = @old_efc + @old_efc * 0.01
+    end
+  end
+
+  def test_grade_level
+    @grade_level = rand(6) + 1
   end
 
 end

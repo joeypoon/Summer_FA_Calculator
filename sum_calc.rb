@@ -14,7 +14,7 @@ end
 while action == "1"
 
   student = AidCalculations.new
-  
+
   student.ask_sap
   if @sap_status == "bad"
     puts "\n***Please re-review application after SAP is reviewed***"

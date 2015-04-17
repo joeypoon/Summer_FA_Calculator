@@ -22,7 +22,7 @@ module LoanCalculation
       case @grade_level
       when 1
         @annual_sub_limit = @dep1sub
-        @annual_loan_limit = @dep3total
+        @annual_loan_limit = @dep1total
       when 2
         @annual_sub_limit = @dep2sub
         @annual_loan_limit = @dep2total
@@ -34,7 +34,7 @@ module LoanCalculation
   end
 
   def calculate_sub
-    if @fs_sub > 0 && @fs_sub + @outside_sub < @annual_sub_limit
+    if @fs_sub + @outside_sub < @annual_sub_limit
       if @fs_sub + @outside_sub + @fs_unsub + @outside_unsub < @annual_loan_limit
         @sub_award = @annual_sub_limit - (@fs_sub + @outside_sub)
         if @sub_award > @annual_sub_limit / 2
@@ -58,7 +58,7 @@ module LoanCalculation
   end
 
   def calculate_unsub
-    if @fs_unsub > 0 && @fs_unsub < @annual_loan_limit - (@fs_sub + @outside_sub)
+    if @fs_unsub < @annual_loan_limit - (@fs_sub + @outside_sub)
       @unsub_award = @annual_loan_limit - (@sub_award + @fs_sub + @outside_sub + @fs_unsub + @outside_unsub)
       if @unsub_award > @annual_loan_limit/2
         @unsub_award = @annual_loan_limit/2 - @sub_award

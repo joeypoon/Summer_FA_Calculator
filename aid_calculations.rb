@@ -65,7 +65,7 @@ class AidCalculations
     max_mdtu = 1500
     if @tasfa == "n"
       calculate_pell
-      calculate_mdtus
+      #calculate_mdtus  No more funding
       set_annual_loan_limits
       calculate_sub
       calculate_unsub
@@ -102,7 +102,7 @@ class AidCalculations
   def initialize
     #2014-2015 Annual Limits
     @dep1sub = 3500
-    @dep3total = 5500
+    @dep1total = 5500
     @dep2sub = 4500
     @dep2total = 6500
     @dep3sub = 5500

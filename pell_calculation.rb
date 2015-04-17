@@ -24,16 +24,20 @@ module PellCalculation
 
       if @pell_leu > 575  #Check if less than a quarter of annual pell remaining
         @pell_award = ((600 - @pell_leu) * 0.01) * @annual_pell
+        if @pell_award > @annual_pell - (@fs_pell + @outside_pell)
+          @pell_award = @annual_pell - (@fs_pell + @outside_pell)
+        end
       else
         @pell_award = @annual_pell - (@fs_pell + @outside_pell)
-        if @pell_award > @annual_pell / 4
-          @pell_award = @annual_pell / 4
-        end
+      end
+      if @pell_award > @annual_pell / 4
+        @pell_award = @annual_pell / 4
       end
     end
     if @pell_award < 0
       @pell_award = 0
     end
+    @pell_award = @pell_award.to_i
   end
 
 end

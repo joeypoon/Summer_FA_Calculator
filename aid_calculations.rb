@@ -344,6 +344,30 @@ class AidCalculations
     @total_awards = @pell_award + @sub_award + @unsub_award + @mdtus + @mdtut
   end
 
+  def check_unmet_need
+    @unmet_need = @new_budget - @new_efc
+    set_total_awards
+    if @total_awards > @unmet_need
+      if @sub_award > 0
+        @sub_award = @sub_award - (@total_awards - @unmet_need)
+        check_negative @sub_award
+        set_total_awards
+      elsif @pell_award > 0
+        @pell_award = @pell_award - (@total_awards - @unmet_need)
+        check_negative @pell_award
+        set_total_awards
+      elsif @mdtus > 0
+        @mdtus = @mdtus - (@total_awards - @unmet_need)
+        check_negative @mdtus
+        set_total_awards
+      elsif @mdtu > 0
+        @mdtu = @mdtu - (@total_awards - @unmet_need)
+        check_negative @mdtu
+        set_total_awards
+      end
+    end
+  end
+
   def check_unsub_over_budget
     if @total_awards > @summer_budget - @summer_efc
       if @unsub_award > 0
@@ -397,6 +421,13 @@ class AidCalculations
     check_sub_over_budget
     check_mdtus_over_budget
     check_pell_over_budget
+    check_unmet_need
+  end
+
+  def check_negative number
+    if number < 0
+      number = 0
+    end
   end
 
 end

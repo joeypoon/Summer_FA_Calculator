@@ -63,7 +63,6 @@ module LoanCalculation
   end
 
   def calculate_unsub
-    set_total_awards
     if @fs_unsub > 0 || @total_awards == 0
       if @fs_unsub < @annual_loan_limit - (@fs_sub + @outside_sub)
         @unsub_award = @annual_loan_limit - (@sub_award + @fs_sub + @outside_sub + @fs_unsub + @outside_unsub)

@@ -332,7 +332,7 @@ class AidCalculations
   end
 
   def calculate_mdtus
-    award_threshold = 1000 #No funding remaining
+    award_threshold = 0 #No funding remaining
     max_mdtu = 1500
     if @pell_award < award_threshold
       @mdtus = max_mdtu - @pell_award

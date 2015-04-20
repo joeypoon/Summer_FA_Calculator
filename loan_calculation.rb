@@ -34,51 +34,59 @@ module LoanCalculation
   end
 
   def calculate_sub
-    if @fs_sub + @outside_sub < @annual_sub_limit
-      if @fs_sub + @outside_sub + @fs_unsub + @outside_unsub < @annual_loan_limit
-        @sub_award = @annual_sub_limit - (@fs_sub + @outside_sub)
-        if @sub_award > @annual_sub_limit / 2
-          @sub_award = @annual_sub_limit / 2
-        end
-        if @total_sub_borrowed + @sub_award >= @sub_agg
-          @sub_award = @sub_agg - @total_sub_borrowed
+    set_total_awards
+    if @fs_sub > 0 || @total_awards == 0
+      if @fs_sub + @outside_sub < @annual_sub_limit
+        if @fs_sub + @outside_sub + @fs_unsub + @outside_unsub < @annual_loan_limit
+          @sub_award = @annual_sub_limit - (@fs_sub + @outside_sub)
+          if @sub_award > @annual_sub_limit / 2
+            @sub_award = @annual_sub_limit / 2
+          end
+          if @total_sub_borrowed + @sub_award >= @sub_agg
+            @sub_award = @sub_agg - @total_sub_borrowed
+          end
+
+        else
+          @sub_award = 0
         end
 
       else
         @sub_award = 0
       end
 
+      if @sub_award < 0
+        @sub_award = 0
+      end
     else
-      @sub_award = 0
-    end
-
-    if @sub_award < 0
       @sub_award = 0
     end
   end
 
   def calculate_unsub
-    if @fs_unsub < @annual_loan_limit - (@fs_sub + @outside_sub)
-      @unsub_award = @annual_loan_limit - (@sub_award + @fs_sub + @outside_sub + @fs_unsub + @outside_unsub)
-      if @unsub_award > @annual_loan_limit/2
-        @unsub_award = @annual_loan_limit/2 - @sub_award
+    set_total_awards
+    if @fs_unsub > 0 || @total_awards == 0
+      if @fs_unsub < @annual_loan_limit - (@fs_sub + @outside_sub)
+        @unsub_award = @annual_loan_limit - (@sub_award + @fs_sub + @outside_sub + @fs_unsub + @outside_unsub)
+        if @unsub_award > @annual_loan_limit/2
+          @unsub_award = @annual_loan_limit/2 - @sub_award
+        end
+        if @total_loans_borrowed + @sub_award + @unsub_award >= @loan_agg
+          @unsub_award = @loan_agg - (@total_loans_borrowed + @sub_award)
+        end
+
+        set_total_awards
+
+        if @total_awards > @summer_budget
+          @unsub_award -= (@total_awards - @summer_budget)
+        end
+
+      else
+        @unsub_award = 0
       end
-      if @total_loans_borrowed + @sub_award + @unsub_award >= @loan_agg
-        @unsub_award = @loan_agg - (@total_loans_borrowed + @sub_award)
+
+      if @unsub_award < 0
+        @unsub_award = 0
       end
-
-      set_total_awards
-
-      if @total_awards > @summer_budget
-        @unsub_award -= (@total_awards - @summer_budget)
-      end
-
-    else
-      @unsub_award = 0
-    end
-
-    if @unsub_award < 0
-      @unsub_award = 0
     end
   end
 

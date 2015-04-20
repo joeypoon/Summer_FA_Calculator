@@ -65,7 +65,7 @@ class AidCalculations
     max_mdtu = 1500
     if @tasfa == "n"
       calculate_pell
-      #calculate_mdtus  No more funding
+      calculate_mdtus
       set_annual_loan_limits
       calculate_sub
       calculate_unsub
@@ -332,7 +332,7 @@ class AidCalculations
   end
 
   def calculate_mdtus
-    award_threshold = 1000
+    award_threshold = 1000 #No funding remaining
     max_mdtu = 1500
     if @pell_award < award_threshold
       @mdtus = max_mdtu - @pell_award
@@ -346,45 +346,49 @@ class AidCalculations
   end
 
   def set_need_awards
-    @need_awards = @sub_awards + @pell_award + @mdtus + @mdtut
+    @need_awards = @sub_award + @pell_award + @mdtus + @mdtut
   end
 
   def check_unmet_need
-    @unmet_need = @new_budget - @new_efc
+    @gross_need = @new_budget - @new_efc
     set_need_awards
-    if @need_awards > @unmet_need
+    if @need_awards > @gross_need
       if @sub_award > 0
-        @sub_award = @sub_award - (@total_awards - @unmet_need)
+        @sub_award = @sub_award - (@need_awards - @gross_need)
         if @sub_award < 0
           @sub_award = 0
         end
+        calculate_unsub
         set_need_awards
       end
     end
-    if @need_awards > @unmet_need
+    if @need_awards > @gross_need
       if @pell_award > 0
-        @pell_award = @pell_award - (@total_awards - @unmet_need)
+        @pell_award = @pell_award - (@need_awards - @gross_need)
         if @pell_award < 0
           @pell_award = 0
         end
+        calculate_unsub
         set_need_awards
       end
     end
-    if @need_awards > @unmet_need
+    if @need_awards > @gross_need
       if @mdtus > 0
-        @mdtus = @mdtus - (@total_awards - @unmet_need)
+        @mdtus = @mdtus - (@need_awards - @gross_need)
         if @mdtus < 0
           @mdtus = 0
         end
+        calculate_unsub
         set_need_awards
       end
     end
-    if @need_awards > @unmet_need
+    if @need_awards > @gross_need
       if @mdtut > 0
-        @mdtut = @mdtut - (@total_awards - @unmet_need)
+        @mdtut = @mdtut - (@need_awards - @gross_need)
         if @mdtut < 0
           @mdtut = 0
         end
+        calculate_unsub
         set_need_awards
       end
     end

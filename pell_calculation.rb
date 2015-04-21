@@ -8,7 +8,9 @@ module PellCalculation
     lowest_pell = 602  #Lowest Pell for 1415 AY
     lower_pell_bound = 100  #Lower bound of EFC bracket for regular Pell calc
     upper_pell_bound = 5100  #Upper bound of EFC bracket for regular Pell calc
-    if @fall_enrollment + @spring_enrollment >= 24 || @grade_level > 4
+    if @grade_level > 4
+      @pell_award = 0
+    elsif @fall_enrollment >= 12 && @spring_enrollment >= 12
       @pell_award = 0
     else
       if @pell_efc > no_pell_threshold
